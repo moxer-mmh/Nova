@@ -1,86 +1,123 @@
-# Nova Book Store - Projet e-Commerce
+# Nova Gaming E-commerce Website
 
-## Description
+A complete e-commerce solution for gaming equipment built with HTML, CSS, JavaScript, PHP, and MySQL.
 
-Nova est une plateforme e-commerce de vente de livres développée en PHP avec une base de données Oracle. Cette application permet aux utilisateurs de parcourir un catalogue de livres, de les ajouter à leur panier et de passer des commandes. Les administrateurs peuvent gérer les livres, les commandes et les utilisateurs.
+## Features
 
-## Fonctionnalités
+### Customer Features
+- User registration and authentication
+- Browse products by category
+- Search functionality
+- Product filtering by price and category
+- Shopping cart system
+- Order management
+- Order history view
+- Order cancellation
 
-### Utilisateurs
-
-- Parcourir le catalogue de livres
-- Rechercher des livres (filtres par titre, auteur, catégorie)
-- Consulter les détails d'un livre
-- Créer un compte utilisateur
-- Se connecter/déconnecter
-- Ajouter des livres au panier
-- Gérer le contenu du panier
-- Passer des commandes
-- Consulter l'historique des commandes
-- Modifier les informations du profil
-
-### Administrateurs
-
-- Gérer le catalogue de livres (ajouter, modifier, supprimer)
-- Gérer les commandes (visualiser, modifier le statut)
-- Consulter les statistiques de vente
-
-## Technologies utilisées
-
-- PHP 8.0+
-- Oracle Database
-- HTML5, CSS3, JavaScript
-- Architecture MVC personnalisée
-
-## Prérequis
-
-- PHP 8.0 ou supérieur avec extension Oracle OCI8
-- Oracle Database 11g ou supérieur
-- Serveur web (Apache, Nginx, etc.)
+### Admin Features
+- Dashboard with statistics
+- Product management (add, edit, delete)
+- Image upload for products
+- Order management
+- User management
 
 ## Installation
 
-1. Cloner le dépôt
+### Prerequisites
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- Web server (Apache, Nginx, etc.)
 
+### Setup Instructions
+
+1. **Set up the database**
+   - Create a MySQL database
+   - Import the database schema by running the `install_db.sql` script
    ```
-   git clone https://github.com/votre-username/Nova.git
+   mysql -u username -p < install_db.sql
    ```
-2. Configurer la base de données Oracle
 
-   - Créer un utilisateur Oracle nommé 'Nova'
-   - Exécuter les scripts SQL du dossier `database/`
-3. Configurer l'application
+2. **Configure database connection**
+   - Open `includes/db.php` and update the database credentials if needed:
+   ```php
+   define('DB_HOST', 'localhost');
+   define('DB_USER', 'root'); // Change to your MySQL username
+   define('DB_PASS', ''); // Change to your MySQL password
+   define('DB_NAME', 'nova_ecommerce');
+   ```
 
-   - Copier le fichier `backend/config/config.sample.php` vers `backend/config/config.local.php`
-   - Modifier les informations de connexion dans `config.local.php`
-4. Configurer le serveur web
+3. **Set up the web server**
+   - Configure your web server to point to the project directory
+   - Ensure the server has write permissions to the `assets/images` directory for product image uploads
 
-   - Configurer le document root vers le dossier du projet
-   - Activer la réécriture d'URL si nécessaire
-5. Accéder à l'application
+4. **Access the website**
+   - Customer site: `http://your-domain/index.php`
+   - Admin panel: `http://your-domain/admin/index.php`
 
-   - URL publique : `http://votre-domaine/`
-   - Admin : `http://votre-domaine/pages/admin/dashboard.php`
-   - Identifiants admin par défaut : `admin / admin123`
+## Default Users
 
-## Structure du projet
+### Admin Account
+- Username: admin
+- Password: admin123
+
+### Regular User Account
+- Username: user
+- Password: user123
+
+## Project Structure
 
 ```
-/
-├── backend/           # Code serveur
-│   ├── api/           # API endpoints
-│   ├── config/        # Configuration
-│   ├── includes/      # Fragments réutilisables
-│   └── models/        # Modèles de données
-├── database/          # Scripts SQL
-├── frontend/          # Assets client
-│   ├── assets/
-│   │   ├── css/       # Feuilles de style
-│   │   ├── js/        # Scripts JavaScript
-│   │   └── images/    # Images
-├── logs/              # Journaux
-├── pages/             # Pages de l'application
-│   ├── admin/         # Administration
-│   └── ...            # Autres pages
-└── utils/             # Utilitaires
+Nova/
+│
+├── admin/                  # Admin panel files
+│   ├── add_product.php     # Add new product form
+│   ├── edit_product.php    # Edit product form
+│   ├── index.php           # Admin dashboard
+│   └── products.php        # Product management
+│
+├── assets/                 # Static assets
+│   ├── css/                # Stylesheets
+│   │   └── style.css      
+│   ├── images/             # Product and site images
+│   └── js/                 # JavaScript files
+│       └── script.js
+│
+├── includes/               # Shared PHP components
+│   ├── db.php              # Database connection
+│   ├── footer.php          # Common footer
+│   └── header.php          # Common header with navigation
+│
+├── add_to_cart.php         # Add product to cart functionality
+├── cancel_order.php        # Order cancellation functionality
+├── cart.php                # Shopping cart page
+├── checkout.php            # Checkout process
+├── database.sql            # Database schema (duplicate of install_db.sql)
+├── index.php               # Homepage
+├── install_db.sql          # Database installation script
+├── login.php               # User login page
+├── logout.php              # Logout functionality
+├── order_confirmation.php  # Order confirmation page
+├── order_details.php       # Detailed view of an order
+├── orders.php              # Order history page
+├── product_details.php     # Single product view
+├── products.php            # All products listing with filters
+├── README.md               # Project documentation
+└── register.php            # User registration page
 ```
+
+## Additional Development
+
+If you want to expand this e-commerce website, consider adding the following features:
+
+1. User profile management
+2. Product reviews and ratings
+3. Wishlist functionality
+4. Discount coupon system
+5. Integrated payment gateway
+6. Email notifications
+7. Advanced product search with filters
+8. Multi-language support
+
+## Credits
+
+This project was developed as a custom e-commerce solution for Nova Gaming.

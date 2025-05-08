@@ -1,103 +1,138 @@
 <?php
-require_once __DIR__ . '/utils/session.php';
-require_once __DIR__ . '/backend/models/Book.php';
+// Include the header
+include_once 'includes/header.php';
 
-// Titre de la page
-$pageTitle = 'Accueil';
+// Get featured products (newest 6 products)
+$featured_query = $conn->query("SELECT * FROM Products WHERE featured = 1 ORDER BY created_at DESC LIMIT 6");
+$featured_products = $featured_query->fetch_all(MYSQLI_ASSOC);
 
-// Récupération des livres mis en avant
-$book = new Book();
-// Error handling for featured books
-try {
-    $featuredBooks = $book->getFeaturedBooks(4);
-} catch (Exception $e) {
-    error_log('Error getting featured books: ' . $e->getMessage());
-    $featuredBooks = [];
-}
+// Get product categories
+$categories_query = $conn->query("SELECT DISTINCT category, COUNT(*) as product_count FROM Products GROUP BY category ORDER BY category");
+$categories = $categories_query->fetch_all(MYSQLI_ASSOC);
 
-// Error handling for new books
-try {
-    $newBooks = $book->getAllBooks(8, 0);
-} catch (Exception $e) {
-    error_log('Error getting new books: ' . $e->getMessage());
-    $newBooks = [];
-}
-
-// Scripts supplémentaires
-$extraScripts = ['/Nova/frontend/assets/js/cart.js'];
-
-// Inclusion de l'en-tête
-require_once __DIR__ . '/backend/includes/header.php';
+// Get new arrivals (newest 4 products)
+$new_arrivals_query = $conn->query("SELECT * FROM Products ORDER BY created_at DESC LIMIT 4");
+$new_arrivals = $new_arrivals_query->fetch_all(MYSQLI_ASSOC);
 ?>
 
-<section class="hero">
+<div class="hero-section">
     <div class="hero-content">
-        <h1>Bienvenue sur Nova Books</h1>
-        <p>Découvrez notre large sélection de livres pour tous les goûts</p>
-        <a href="/Nova/pages/search.php" class="btn btn-primary">Explorer le catalogue</a>
+        <h1>Welcome to Nova Gaming</h1>
+        <p>Your one-stop shop for premium gaming equipment</p>
+        <a href="products.php" class="btn btn-large">Shop Now</a>
+    </div>
+</div>
+
+<section class="featured-section">
+    <div class="section-header">
+        <h2>Featured Products</h2>
+        <a href="products.php?featured=1" class="view-all">View All</a>
+    </div>
+    
+    <div class="product-grid">
+        <?php if (count($featured_products) > 0): ?>
+            <?php foreach ($featured_products as $product): ?>
+                <div class="product-card">
+                    <div class="product-img">
+                        <a href="product_details.php?id=<?php echo $product['product_id']; ?>">
+                            <img src="assets/images/<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        </a>
+                        <?php if ($product['featured']): ?>
+                            <span class="featured-badge">Featured</span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">
+                            <a href="product_details.php?id=<?php echo $product['product_id']; ?>">
+                                <?php echo htmlspecialchars($product['name']); ?>
+                            </a>
+                        </h3>
+                        <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                        <p class="product-category"><?php echo htmlspecialchars($product['category']); ?></p>
+                        <div class="product-actions">
+                            <a href="product_details.php?id=<?php echo $product['product_id']; ?>" class="btn">View Details</a>
+                            <?php if ($product['stock'] > 0): ?>
+                                <form action="add_to_cart.php" method="post" class="add-to-cart-form">
+                                    <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-secondary">Add to Cart</button>
+                                </form>
+                            <?php else: ?>
+                                <button disabled class="btn btn-disabled">Out of Stock</button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="empty-state">
+                <p>No featured products available at the moment.</p>
+            </div>
+        <?php endif; ?>
     </div>
 </section>
 
-<section class="featured-books">
-    <h2>Livres en vedette</h2>
-    <div class="books-container">
-        <?php foreach ($featuredBooks as $book): ?>
-            <div class="book-card">
-                <div class="book-image">
-                    <a href="/Nova/pages/book.php?id=<?php echo $book['BOOK_ID']; ?>">
-                        <img src="/Nova/frontend/assets/images/books/<?php echo $book['IMAGE_URL'] ? $book['IMAGE_URL'] : 'default.jpg'; ?>" 
-                             alt="<?php echo htmlspecialchars($book['TITLE']); ?>">
-                    </a>
+<section class="categories-section">
+    <div class="section-header">
+        <h2>Shop by Category</h2>
+    </div>
+    
+    <div class="category-grid">
+        <?php foreach ($categories as $category): ?>
+            <a href="products.php?category=<?php echo urlencode($category['category']); ?>" class="category-card">
+                <div class="category-content">
+                    <h3><?php echo htmlspecialchars($category['category']); ?></h3>
+                    <p><?php echo $category['product_count']; ?> products</p>
                 </div>
-                <div class="book-info">
-                    <h3 class="book-title">
-                        <a href="/Nova/pages/book.php?id=<?php echo $book['BOOK_ID']; ?>">
-                            <?php echo htmlspecialchars($book['TITLE']); ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</section>
+
+<section class="new-arrivals-section">
+    <div class="section-header">
+        <h2>New Arrivals</h2>
+        <a href="products.php?sort=newest" class="view-all">View All</a>
+    </div>
+    
+    <div class="product-grid">
+        <?php foreach ($new_arrivals as $product): ?>
+            <div class="product-card">
+                <div class="product-img">
+                    <a href="product_details.php?id=<?php echo $product['product_id']; ?>">
+                        <img src="assets/images/<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    </a>
+                    <span class="new-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">
+                        <a href="product_details.php?id=<?php echo $product['product_id']; ?>">
+                            <?php echo htmlspecialchars($product['name']); ?>
                         </a>
                     </h3>
-                    <div class="book-author"><?php echo htmlspecialchars($book['AUTHOR']); ?></div>
-                    <div class="book-price"><?php echo formatPrice($book['PRICE']); ?></div>
-                    <button class="btn btn-primary add-to-cart-btn" data-id="<?php echo $book['BOOK_ID']; ?>">
-                        Ajouter au panier
-                    </button>
+                    <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                    <p class="product-category"><?php echo htmlspecialchars($product['category']); ?></p>
+                    <div class="product-actions">
+                        <a href="product_details.php?id=<?php echo $product['product_id']; ?>" class="btn">View Details</a>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
 </section>
 
-<section class="new-books">
-    <h2>Nouveautés</h2>
-    <div class="books-container">
-        <?php foreach ($newBooks as $book): ?>
-            <div class="book-card">
-                <div class="book-image">
-                    <a href="/Nova/pages/book.php?id=<?php echo $book['BOOK_ID']; ?>">
-                        <img src="/Nova/frontend/assets/images/books/<?php echo $book['IMAGE_URL'] ? $book['IMAGE_URL'] : 'default.jpg'; ?>" 
-                             alt="<?php echo htmlspecialchars($book['TITLE']); ?>">
-                    </a>
-                </div>
-                <div class="book-info">
-                    <h3 class="book-title">
-                        <a href="/Nova/pages/book.php?id=<?php echo $book['BOOK_ID']; ?>">
-                            <?php echo htmlspecialchars($book['TITLE']); ?>
-                        </a>
-                    </h3>
-                    <div class="book-author"><?php echo htmlspecialchars($book['AUTHOR']); ?></div>
-                    <div class="book-price"><?php echo formatPrice($book['PRICE']); ?></div>
-                    <button class="btn btn-primary add-to-cart-btn" data-id="<?php echo $book['BOOK_ID']; ?>">
-                        Ajouter au panier
-                    </button>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-    <div class="view-all-link">
-        <a href="/Nova/pages/search.php" class="btn btn-secondary">Voir tout le catalogue</a>
+<section class="newsletter-section">
+    <div class="newsletter-content">
+        <h2>Subscribe to Our Newsletter</h2>
+        <p>Stay updated with the latest products, exclusive deals, and gaming news.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit" class="btn">Subscribe</button>
+        </form>
     </div>
 </section>
 
 <?php
-// Inclusion du pied de page
-require_once __DIR__ . '/backend/includes/footer.php';
+// Include the footer
+include_once 'includes/footer.php';
 ?>
