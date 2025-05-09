@@ -254,7 +254,7 @@ header .container {
 
 /* Hero Section */
 .hero-section { /* Renamed from .hero for clarity */
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('../images/hero-bg.jpg') no-repeat center center/cover;
+    /*background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('../images/hero-bg.jpg') no-repeat center center/cover;*/
     color: #ffffff;
     text-align: center;
     padding: 100px 20px; /* Increased padding */
@@ -1023,6 +1023,45 @@ footer {
     background: #1f1f1f;
 }
 
+/* Newsletter Section */
+.newsletter-section {
+    background-color: #1f1f1f;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+    margin: 3rem 0;
+}
+
+.newsletter-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+}
+
+.newsletter-content p {
+    color: #aaa;
+    margin-bottom: 1.5rem;
+    max-width: 500px; /* Limit width for readability */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.newsletter-form {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.newsletter-form input[type="email"] {
+    flex-grow: 1;
+    padding: 0.75rem;
+}
+
+.newsletter-form .btn {
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .products-page-wrapper {
@@ -1297,6 +1336,13 @@ footer {
     /* Make filter cards stay in single column */
     .admin-filters .filter-row {
         flex-direction: column;
+    }
+    .newsletter-form {
+        flex-direction: column;
+    }
+
+    .newsletter-form input[type="email"] {
+        margin-bottom: 0.5rem;
     }
 }
 
