@@ -1,1 +1,54 @@
-assets/images/*
+# Image uploads
+/assets/images/*
+/assets/images/products/*
+!/assets/images/products/.gitkeep
+
+# Sensitive information
+/includes/db_credentials.php
+
+# User-specific files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Cache and logs
+/cache/*
+/logs/*
+*.log
+error_log
+
+# Temporary files
+/tmp/*
+*.tmp
+*.bak
+*.swp
+
+# Vendor files if you later use Composer
+/vendor/
+
+# Sessions
+/sessions/
+
+# Temporary content
+/backups/
+/downloads/
+
+# Development tools
+/node_modules/
+package-lock.json
+composer.lock
+yarn.lock
+
+
+# System files
+.htaccess
+web.config

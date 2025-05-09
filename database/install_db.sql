@@ -221,25 +221,5 @@ DELIMITER ;
 
 -- Insert sample admin user
 INSERT INTO Users (username, password, email, full_name, is_admin) 
-VALUES ('admin', '$2y$10$8jnbBCL5xdYrwMHVYCnjMO2lDq.ZSyHFI0TpYw5nQF3gDrP0MMd9K', 'admin@example.com', 'Admin User', 1);
+VALUES ('admin', '$2y$10$0Yh9FAGeP77hi6HQnFjc6OFFYXRpWyGvKHX6ujTOBeDf3IXJ6az6S', 'admin@example.com', 'Admin User', 1);
 -- Password: admin123
-
--- Insert sample regular user
-INSERT INTO Users (username, password, email, full_name, is_admin) 
-VALUES ('user', '$2y$10$qLy6vbsldPhRRuHRGn0kw.o7Z7AQhvYzQMoaUvwkLVcn3pjL96ex6', 'user@example.com', 'Regular User', 0);
--- Password: user123
-
--- Insert sample products
-INSERT INTO Products (name, description, price, stock, image_url, category, featured) VALUES
-('Gaming Laptop', 'High-performance gaming laptop with RTX 3080, 32GB RAM, and 1TB SSD. Features a 15.6" 144Hz display and customizable RGB keyboard.', 1299.99, 10, 'laptop1.jpg', 'Electronics', TRUE),
-('Mechanical Keyboard', 'RGB mechanical keyboard with Cherry MX switches for the ultimate gaming experience. Features customizable backlighting and programmable macros.', 129.99, 50, 'keyboard1.jpg', 'Accessories', TRUE),
-('Wireless Mouse', 'High-precision wireless gaming mouse with adjustable DPI settings and customizable buttons. Includes RGB lighting and ergonomic design.', 79.99, 30, 'mouse1.jpg', 'Accessories', TRUE),
-('Gaming Monitor', '27-inch 4K gaming monitor with 144Hz refresh rate and 1ms response time. Features HDR support and FreeSync/G-Sync compatibility for smooth gameplay.', 499.99, 15, 'monitor1.jpg', 'Electronics', FALSE),
-('Gaming Chair', 'Ergonomic gaming chair with lumbar support, adjustable armrests, and reclining feature. Premium materials for comfort during long gaming sessions.', 249.99, 20, 'chair1.jpg', 'Furniture', FALSE),
-('PC Case', 'Mid-tower gaming PC case with tempered glass side panel and excellent airflow. Supports ATX, Micro-ATX, and Mini-ITX motherboards with good cable management.', 89.99, 25, 'case1.jpg', 'Components', FALSE),
-('Gaming Headset', 'Surround sound gaming headset with noise-cancelling microphone and comfortable ear cushions. Compatible with PC, PlayStation, and Xbox.', 99.99, 40, 'headset1.jpg', 'Audio', FALSE),
-('SSD 1TB', 'High-speed 1TB solid state drive with read speeds up to 3500MB/s. Perfect for reducing game loading times and improving system responsiveness.', 149.99, 35, 'ssd1.jpg', 'Storage', FALSE),
-('Gaming Controller', 'Wireless gaming controller for PC and consoles with customizable buttons and improved ergonomics. Features precision thumbsticks and responsive triggers.', 59.99, 45, 'controller1.jpg', 'Accessories', FALSE),
-('Graphics Card', 'High-end gaming graphics card with 12GB GDDR6 memory and ray-tracing capabilities. Perfect for 4K gaming and demanding applications.', 699.99, 8, 'gpu1.jpg', 'Components', FALSE);
-
--- End of database schema and sample data
