@@ -1,10 +1,26 @@
-/**
- * Nova Gaming E-commerce Website JavaScript
- */
+window.setupResponsiveTables = function() {
+    const tables = document.querySelectorAll('.cart-table, .order-table, .admin-table');
+    
+    tables.forEach(table => {
+        const headerCells = table.querySelectorAll('thead th');
+        if (!headerCells.length) return;
+        
+        const headerTexts = Array.from(headerCells).map(cell => cell.textContent.trim());
+        
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            cells.forEach((cell, index) => {
+                const headerIndex = index % headerTexts.length;
+                if (!cell.hasAttribute('data-label')) {
+                    cell.setAttribute('data-label', headerTexts[headerIndex]);
+                }
+            });
+        });
+    });
+};
 
-// Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Product quantity controls
     const quantityInputs = document.querySelectorAll('.quantity-input');
     if (quantityInputs) {
         quantityInputs.forEach(input => {
@@ -30,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Auto-hide alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert');
     if (alerts) {
         alerts.forEach(alert => {
@@ -43,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Mobile navigation toggle
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
     
@@ -53,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Collapsible filter sidebar on mobile
     const filterToggle = document.querySelector('.filter-toggle');
     const filterContent = document.querySelector('.filter-content');
     
@@ -64,32 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle data-labels for responsive tables
-    function setupResponsiveTables() {
-        const tables = document.querySelectorAll('.cart-table, .order-table, .admin-table');
-        
-        tables.forEach(table => {
-            const headerCells = table.querySelectorAll('thead th');
-            if (!headerCells.length) return;
-            
-            const headerTexts = Array.from(headerCells).map(cell => cell.textContent.trim());
-            
-            const rows = table.querySelectorAll('tbody tr');
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                cells.forEach((cell, index) => {
-                    const headerIndex = index % headerTexts.length;
-                    if (!cell.hasAttribute('data-label')) {
-                        cell.setAttribute('data-label', headerTexts[headerIndex]);
-                    }
-                });
-            });
-        });
-    }
-    
     setupResponsiveTables();
     
-    // Product image preview in admin forms
     const imageInput = document.getElementById('image');
     const imagePreview = document.getElementById('image-preview');
     
@@ -108,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Category filter on products page
     const categoryFilters = document.querySelectorAll('.category-filter');
     if (categoryFilters) {
         categoryFilters.forEach(filter => {
@@ -118,17 +106,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Price range filter
     const priceRange = document.getElementById('price-range');
     const priceDisplay = document.getElementById('price-display');
     
     if (priceRange && priceDisplay) {
         priceRange.addEventListener('input', function() {
-            priceDisplay.textContent = '$' + this.value;
+            priceDisplay.textContent = 'DA ' + this.value;
         });
     }
     
-    // Improved filter toggle for mobile
     function setupFilterToggle() {
         const filterToggle = document.querySelector('.filter-toggle');
         const filterContent = document.querySelector('.filter-content');
@@ -149,12 +135,10 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFilterToggle();
 });
 
-// Add window resize handler for responsive elements
 let resizeTimeout;
 window.addEventListener('resize', function() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(function() {
-        // Hide mobile menu when resizing to desktop
         const navLinks = document.querySelector('.nav-links');
         const windowWidth = window.innerWidth;
         
@@ -162,7 +146,6 @@ window.addEventListener('resize', function() {
             navLinks.classList.remove('show');
         }
         
-        // Refresh responsive tables
         setupResponsiveTables();
     }, 250);
 });

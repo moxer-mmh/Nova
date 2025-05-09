@@ -5,11 +5,9 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection and currency formatting
 include_once '../includes/db.php';
-include_once '../includes/currency_format.php'; // Add this line
+include_once '../includes/currency_format.php';
 
-// Check if user ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header('Location: manage_users.php');
     exit();
@@ -17,7 +15,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $user_id = (int)$_GET['id'];
 
-// Get user information
 $stmt = $conn->prepare("SELECT username, full_name, email FROM Users WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -31,7 +28,6 @@ if ($result->num_rows === 0) {
 $user = $result->fetch_assoc();
 $stmt->close();
 
-// Get user orders
 $stmt = $conn->prepare("SELECT * FROM Orders WHERE user_id = ? ORDER BY order_date DESC");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -39,7 +35,6 @@ $orders_result = $stmt->get_result();
 $orders = $orders_result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Generate a version string for cache busting
 $admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>

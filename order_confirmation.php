@@ -1,14 +1,11 @@
 <?php
-// Include the header
 include_once 'includes/header.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Check if order ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: orders.php");
     exit();
@@ -16,7 +13,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $order_id = (int)$_GET['id'];
 
-// Call the stored procedure to get order details
 $stmt = $conn->prepare("CALL GetOrderDetails(?)");
 $stmt->bind_param("i", $order_id);
 $stmt->execute();
@@ -24,14 +20,12 @@ $result = $stmt->get_result();
 $order_items = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Check if order exists and belongs to the current user
 if (empty($order_items) || $order_items[0]['user_id'] != $_SESSION['user_id']) {
     echo "<div class='alert alert-danger'>Order not found or you don't have permission to view it.</div>";
     include_once 'includes/footer.php';
     exit();
 }
 
-// Get order summary from the first item
 $order_summary = $order_items[0];
 ?>
 
@@ -84,6 +78,5 @@ $order_summary = $order_items[0];
 </div>
 
 <?php
-// Include the footer
 include_once 'includes/footer.php';
 ?>

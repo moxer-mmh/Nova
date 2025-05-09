@@ -5,15 +5,12 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection
 include_once '../includes/db.php';
 
-// Handle admin status toggle
 if(isset($_POST['toggle_admin'])) {
     $user_id = $_POST['user_id'];
     $is_admin = $_POST['make_admin'] ? 1 : 0;
     
-    // Don't allow self-demotion
     if($user_id == $_SESSION['user_id'] && $is_admin == 0) {
         $error = "You cannot remove your own admin status.";
     } else {
@@ -27,11 +24,9 @@ if(isset($_POST['toggle_admin'])) {
     }
 }
 
-// Set up filters
 $role_filter = isset($_GET['role']) ? $_GET['role'] : '';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Build the WHERE clause
 $where_clause = "1=1";
 $params = [];
 $types = '';
@@ -51,12 +46,10 @@ if(!empty($search)) {
     $types .= "sss";
 }
 
-// Set up pagination
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $per_page = 15;
 $offset = ($current_page - 1) * $per_page;
 
-// Get total user count with filters
 $count_sql = "SELECT COUNT(*) as total FROM Users WHERE $where_clause";
 $stmt = $conn->prepare($count_sql);
 if(!empty($types)) {
@@ -69,7 +62,6 @@ $stmt->close();
 
 $total_pages = ceil($total_users / $per_page);
 
-// Get users with pagination and filters
 $sql = "SELECT * FROM Users WHERE $where_clause ORDER BY username ASC LIMIT ? OFFSET ?";
 $params[] = $per_page;
 $params[] = $offset;
@@ -82,7 +74,6 @@ $result = $stmt->get_result();
 $users = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Generate a version string for cache busting
 $admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>
@@ -280,7 +271,6 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
     </style>
     
     <script>
-        // Auto-submit role filter when changed
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('role').addEventListener('change', function() {
                 document.querySelector('.filter-form').submit();

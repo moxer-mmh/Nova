@@ -1,14 +1,11 @@
 <?php
-// Include the header
 include_once 'includes/header.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Call the stored procedure to get order history
 $stmt = $conn->prepare("CALL GetOrderHistory(?)");
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
@@ -72,6 +69,5 @@ $stmt->close();
 <?php endif; ?>
 
 <?php
-// Include the footer
 include_once 'includes/footer.php';
 ?>

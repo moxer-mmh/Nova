@@ -5,22 +5,17 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection
 include_once '../includes/db.php';
 
-// Initialize variables
 $name = $description = $price = $stock = $category = '';
 $featured = 0;
 $errors = [];
 $success = false;
 
-// Get categories for dropdown
 $categories_result = $conn->query("SELECT DISTINCT category FROM Products ORDER BY category ASC");
 $categories = $categories_result->fetch_all(MYSQLI_ASSOC);
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate input
     $name = trim($_POST['name']);
     $description = trim($_POST['description']);
     $price = floatval($_POST['price']);
@@ -48,16 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Category is required";
     }
     
-    // Handle new category
     if ($category === 'new' && !empty($_POST['new_category'])) {
         $category = trim($_POST['new_category']);
     }
     
-    // Handle image upload
     $image_url = '';
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-        $max_size = 5 * 1024 * 1024; // 5MB
+        $max_size = 5 * 1024 * 1024;
         
         if (!in_array($_FILES['product_image']['type'], $allowed_types)) {
             $errors[] = "Only JPG, PNG, and GIF images are allowed";
@@ -78,14 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Product image is required";
     }
     
-    // If no errors, save the product
     if (empty($errors)) {
         $stmt = $conn->prepare("INSERT INTO Products (name, description, price, stock, category, image_url, featured, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
         $stmt->bind_param("ssdssis", $name, $description, $price, $stock, $category, $image_url, $featured);
         
         if ($stmt->execute()) {
             $success = true;
-            // Clear form fields after successful submission
             $name = $description = $price = $stock = $category = '';
             $featured = 0;
         } else {
@@ -96,7 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Generate a version string for cache busting
 $admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>
@@ -231,7 +221,6 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
     </footer>
     
     <script>
-        // Handle category selection
         document.getElementById('category').addEventListener('change', function() {
             const newCategoryGroup = document.getElementById('new-category-group');
             if (this.value === 'new') {

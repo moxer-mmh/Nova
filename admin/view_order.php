@@ -5,11 +5,9 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection and currency formatting
 include_once '../includes/db.php';
-include_once '../includes/currency_format.php'; // Add this line
+include_once '../includes/currency_format.php';
 
-// Check if order ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header('Location: manage_orders.php');
     exit();
@@ -17,7 +15,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $order_id = (int)$_GET['id'];
 
-// Get order information
 $stmt = $conn->prepare("SELECT o.*, u.username, u.full_name, u.email FROM Orders o 
                         JOIN Users u ON o.user_id = u.user_id 
                         WHERE o.order_id = ?");
@@ -33,7 +30,6 @@ if ($result->num_rows === 0) {
 $order = $result->fetch_assoc();
 $stmt->close();
 
-// Get order items
 $stmt = $conn->prepare("SELECT oi.*, p.name, p.image_url FROM Order_Items oi 
                         JOIN Products p ON oi.product_id = p.product_id 
                         WHERE oi.order_id = ?");
@@ -43,7 +39,6 @@ $items_result = $stmt->get_result();
 $order_items = $items_result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Generate a version string for cache busting
 $admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>

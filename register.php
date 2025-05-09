@@ -1,29 +1,23 @@
 <?php
-// Start session
 session_start();
 
-// If user is already logged in, redirect to homepage
 if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
 
-// Include database connection
 require_once 'includes/db.php';
 
 $success = '';
 $error = '';
 
-// Process registration form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form data
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     $full_name = trim($_POST['full_name'] ?? '');
     
-    // Validate input
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password) || empty($full_name)) {
         $error = "All fields are required.";
     } elseif ($password !== $confirm_password) {
@@ -33,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Please enter a valid email address.";
     } else {
-        // Check if username already exists
         $stmt = $conn->prepare("SELECT user_id FROM Users WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
@@ -44,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $stmt->close();
             
-            // Check if email already exists
             $stmt = $conn->prepare("SELECT user_id FROM Users WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
@@ -55,16 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $stmt->close();
                 
-                // Hash password
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 
-                // Insert new user
                 $stmt = $conn->prepare("INSERT INTO Users (username, password, email, full_name) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param("ssss", $username, $hashed_password, $email, $full_name);
                 
                 if ($stmt->execute()) {
                     $success = "Registration successful! You can now login.";
-                    // Clear form data
                     $username = $email = $full_name = '';
                 } else {
                     $error = "Error registering user: " . $conn->error;
@@ -76,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Generate a version string for cache busting
 $css_file_path = __DIR__ . '/assets/css/style.css';
 $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1';
 ?>

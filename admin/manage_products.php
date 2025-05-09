@@ -5,15 +5,12 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection and currency formatting
 include_once '../includes/db.php';
-include_once '../includes/currency_format.php'; // Add this line
+include_once '../includes/currency_format.php';
 
-// Handle deletion if requested
 if(isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $product_id = $_GET['delete'];
     
-    // Get image file name before deleting the product
     $stmt = $conn->prepare("SELECT image_url FROM Products WHERE product_id = ?");
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
@@ -21,33 +18,28 @@ if(isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     if($row = $result->fetch_assoc()) {
         $image_file = '../assets/images/' . $row['image_url'];
         if(file_exists($image_file)) {
-            unlink($image_file); // Delete image file
+            unlink($image_file);
         }
     }
     $stmt->close();
     
-    // Delete the product
     $stmt = $conn->prepare("DELETE FROM Products WHERE product_id = ?");
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
     $stmt->close();
     
-    // Redirect to refresh the page
     header('Location: manage_products.php?deleted=1');
     exit();
 }
 
-// Set up pagination
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $per_page = 10;
 $offset = ($current_page - 1) * $per_page;
 
-// Get total product count
 $result = $conn->query("SELECT COUNT(*) as total FROM Products");
 $total_products = $result->fetch_assoc()['total'];
 $total_pages = ceil($total_products / $per_page);
 
-// Get products with pagination
 $stmt = $conn->prepare("SELECT * FROM Products ORDER BY created_at DESC LIMIT ? OFFSET ?");
 $stmt->bind_param("ii", $per_page, $offset);
 $stmt->execute();
@@ -55,7 +47,6 @@ $result = $stmt->get_result();
 $products = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Generate a version string for cache busting for admin pages
 $admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>

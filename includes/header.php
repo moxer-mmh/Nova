@@ -1,22 +1,18 @@
 <?php
-// Start session if not already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Include database connection
 require_once dirname(__FILE__) . '/db.php';
-require_once 'currency_format.php'; // Add this line to include the currency formatter
+require_once 'currency_format.php';
 
-// Calculate base URL for assets and navigation
 $document_root = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/');
 $app_folder = rtrim(str_replace('\\', '/', dirname(dirname(__FILE__))), '/');
 $base_url = str_replace($document_root, '', $app_folder);
-if ($base_url === $app_folder) { // Fallback if DOCUMENT_ROOT is not part of app_folder (e.g. CLI or misconfig)
-    $base_url = ''; // Assume root or handle error as appropriate
+if ($base_url === $app_folder) {
+    $base_url = '';
 }
 
-// Get cart item count if user is logged in
 $cart_count = 0;
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
@@ -30,7 +26,6 @@ if (isset($_SESSION['user_id'])) {
     $cart_query->close();
 }
 
-// Generate a version string for cache busting based on file modification time
 $css_file_path = dirname(dirname(__FILE__)) . '/assets/css/style.css';
 $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1';
 ?>
@@ -76,7 +71,6 @@ $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1';
     
     <div class="container main-content">
         <?php
-        // Display flash messages if any
         if (isset($_SESSION['success_message'])) {
             echo '<div class="alert alert-success">' . $_SESSION['success_message'] . '</div>';
             unset($_SESSION['success_message']);

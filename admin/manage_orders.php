@@ -5,11 +5,9 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection and currency formatting
 include_once '../includes/db.php';
-include_once '../includes/currency_format.php'; // Add this line
+include_once '../includes/currency_format.php';
 
-// Handle order status update
 if(isset($_POST['update_status'])) {
     $order_id = $_POST['order_id'];
     $new_status = $_POST['status'];
@@ -23,11 +21,9 @@ if(isset($_POST['update_status'])) {
     exit();
 }
 
-// Set up filters
 $status_filter = isset($_GET['status']) ? $_GET['status'] : '';
 $date_filter = isset($_GET['date']) ? $_GET['date'] : '';
 
-// Build the WHERE clause
 $where_clause = "1=1";
 $params = [];
 $types = '';
@@ -44,12 +40,10 @@ if(!empty($date_filter)) {
     $types .= "s";
 }
 
-// Set up pagination
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $per_page = 10;
 $offset = ($current_page - 1) * $per_page;
 
-// Get total order count with filters
 $count_sql = "SELECT COUNT(*) as total FROM Orders o WHERE $where_clause";
 $stmt = $conn->prepare($count_sql);
 if(!empty($types)) {
@@ -62,7 +56,6 @@ $stmt->close();
 
 $total_pages = ceil($total_orders / $per_page);
 
-// Get orders with pagination and filters
 $sql = "SELECT o.*, u.username 
         FROM Orders o 
         JOIN Users u ON o.user_id = u.user_id 
@@ -80,15 +73,12 @@ $result = $stmt->get_result();
 $orders = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Get list of statuses for filter
 $statuses_result = $conn->query("SELECT DISTINCT status FROM Orders");
 $statuses = $statuses_result->fetch_all(MYSQLI_ASSOC);
 
-// Get list of dates with orders for filter
 $dates_result = $conn->query("SELECT DISTINCT DATE(order_date) as order_day FROM Orders ORDER BY order_day DESC");
 $dates = $dates_result->fetch_all(MYSQLI_ASSOC);
 
-// Generate a version string for cache busting
 $admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>
@@ -265,7 +255,6 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
         
-        // Auto-submit filters when changed
         document.addEventListener('DOMContentLoaded', function() {
             const filterSelects = document.querySelectorAll('.filter-form select');
             filterSelects.forEach(select => {

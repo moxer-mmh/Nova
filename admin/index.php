@@ -1,38 +1,29 @@
 <?php
-// Start session and include necessary files
 session_start();
 include_once '../includes/db.php';
-include_once '../includes/currency_format.php'; // Add this line
+include_once '../includes/currency_format.php';
 
-// Check if the user is logged in and is an admin
 if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
-    // Redirect to the home page if not an admin
     header('Location: ../index.php');
     exit();
 }
 
-// Get summary statistics
-// Total products
 $result = $conn->query("SELECT COUNT(*) as total_products FROM Products");
 $total_products = $result->fetch_assoc()['total_products'];
 
-// Total orders
 $result = $conn->query("SELECT COUNT(*) as total_orders FROM Orders");
 $total_orders = $result->fetch_assoc()['total_orders'];
 
-// Total users
 $result = $conn->query("SELECT COUNT(*) as total_users FROM Users WHERE is_admin = 0");
 $total_users = $result->fetch_assoc()['total_users'];
 
-// Recent orders
 $result = $conn->query("SELECT o.order_id, o.order_date, o.total_amount, o.status, u.username 
                         FROM Orders o 
                         JOIN Users u ON o.user_id = u.user_id 
                         ORDER BY o.order_date DESC LIMIT 5");
 $recent_orders = $result->fetch_all(MYSQLI_ASSOC);
 
-// Generate a version string for cache busting for admin pages
-$admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css'; // Correct path from admin folder
+$admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>
 

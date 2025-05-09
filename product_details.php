@@ -1,8 +1,6 @@
 <?php
-// Include the header
 include_once 'includes/header.php';
 
-// Check if product ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     $_SESSION['error_message'] = "Invalid product ID.";
     header("Location: products.php");
@@ -11,7 +9,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $product_id = (int)$_GET['id'];
 
-// Get product details
 $stmt = $conn->prepare("SELECT * FROM Products WHERE product_id = ?");
 $stmt->bind_param("i", $product_id);
 $stmt->execute();
@@ -26,7 +23,6 @@ if ($result->num_rows === 0) {
 $product = $result->fetch_assoc();
 $stmt->close();
 
-// Get related products (same category, excluding current product)
 $stmt = $conn->prepare("SELECT * FROM Products WHERE category = ? AND product_id != ? LIMIT 4");
 $stmt->bind_param("si", $product['category'], $product_id);
 $stmt->execute();
@@ -150,15 +146,11 @@ $stmt->close();
 <?php endif; ?>
 
 <script>
-/**
- * Change the main product image when a thumbnail is clicked
- */
 function changeMainImage(src) {
     const mainImage = document.getElementById('main-product-image');
     if (mainImage) {
         mainImage.src = src;
         
-        // Highlight the active thumbnail
         const thumbnails = document.querySelectorAll('.thumbnail');
         thumbnails.forEach(thumb => {
             if (thumb.src === src) {
@@ -170,31 +162,22 @@ function changeMainImage(src) {
     }
 }
 
-/**
- * Decrease the quantity input value
- */
 function decrementQuantity() {
     const quantityInput = document.getElementById('quantity');
     const currentValue = parseInt(quantityInput.value);
     if (currentValue > 1) {
         quantityInput.value = currentValue - 1;
-        // Trigger change event for any listeners
         quantityInput.dispatchEvent(new Event('change'));
     }
 }
 
-/**
- * Increase the quantity input value up to maximum stock
- */
 function incrementQuantity(maxStock) {
     const quantityInput = document.getElementById('quantity');
     const currentValue = parseInt(quantityInput.value);
     if (currentValue < maxStock) {
         quantityInput.value = currentValue + 1;
-        // Trigger change event for any listeners
         quantityInput.dispatchEvent(new Event('change'));
     } else {
-        // Visual feedback when max stock is reached
         quantityInput.classList.add('max-reached');
         setTimeout(() => {
             quantityInput.classList.remove('max-reached');
@@ -202,11 +185,7 @@ function incrementQuantity(maxStock) {
     }
 }
 
-/**
- * Show notification modal for out-of-stock products
- */
 function notifyWhenAvailable(productId) {
-    // Create a simple modal to collect email
     const modal = document.createElement('div');
     modal.className = 'notification-modal';
     modal.innerHTML = `
@@ -232,17 +211,9 @@ function submitNotification(productId) {
         return;
     }
     
-    // Here you would send the data to the server
-    // For now, just show a confirmation message
     alert('Thank you! We will notify you when this product is back in stock.');
     closeNotificationModal();
     
-    // In a real implementation, you would call an API endpoint:
-    // fetch('notify_availability.php', {
-    //     method: 'POST',
-    //     body: JSON.stringify({ product_id: productId, email: email }),
-    //     headers: { 'Content-Type': 'application/json' }
-    // });
 }
 
 function closeNotificationModal() {
@@ -252,7 +223,6 @@ function closeNotificationModal() {
     }
 }
 
-// Add this CSS for the notification modal and quantity feedback
 document.head.insertAdjacentHTML('beforeend', `
 <style>
     .max-reached {
@@ -297,6 +267,5 @@ document.head.insertAdjacentHTML('beforeend', `
 </script>
 
 <?php
-// Include the footer
 include_once 'includes/footer.php';
 ?>

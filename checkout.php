@@ -1,14 +1,11 @@
 <?php
-// Include the header
 include_once 'includes/header.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Get cart items
 $sql = "SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price 
         FROM Cart c 
         JOIN Products p ON c.product_id = p.product_id 
@@ -21,15 +18,12 @@ $result = $stmt->get_result();
 $cart_items = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Calculate cart total
 $cart_total = 0;
 foreach ($cart_items as $item) {
     $cart_total += $item['price'] * $item['quantity'];
 }
 
-// Process checkout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
-    // Check if cart is empty
     if (empty($cart_items)) {
         $_SESSION['error'] = "Your cart is empty.";
         header("Location: cart.php");
@@ -37,15 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     }
     
     try {
-        // Start transaction
         $conn->begin_transaction();
         
-        // Call the stored procedure to finalize the order
         $stmt = $conn->prepare("CALL FinalizeOrder(?, @order_id)");
         $stmt->bind_param("i", $_SESSION['user_id']);
         $stmt->execute();
         
-        // Get the order ID from the output parameter
         $result = $conn->query("SELECT @order_id as order_id");
         $order_id = $result->fetch_assoc()['order_id'];
         
@@ -53,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             throw new Exception("Failed to create order.");
         }
         
-        // Commit the transaction
         $conn->commit();
         
         $_SESSION['success'] = "Order placed successfully!";
@@ -61,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         exit();
         
     } catch (Exception $e) {
-        // Rollback the transaction in case of error
         $conn->rollback();
         $_SESSION['error'] = "Error processing your order: " . $e->getMessage();
     }
@@ -148,6 +137,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 <?php endif; ?>
 
 <?php
-// Include the footer
 include_once 'includes/footer.php';
 ?>

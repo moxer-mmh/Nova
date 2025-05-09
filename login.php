@@ -1,28 +1,22 @@
 <?php
-// Start session
 session_start();
 
-// If user is already logged in, redirect to homepage
 if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
 
-// Include database connection
 require_once 'includes/db.php';
 
 $error = '';
 
-// Process login form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     
-    // Validate input
     if (empty($username) || empty($password)) {
         $error = "Please enter both username and password.";
     } else {
-        // Check if user exists
         $stmt = $conn->prepare("SELECT user_id, username, password, full_name, is_admin FROM Users WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
@@ -31,18 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
             
-            // Verify password
             if ($user && password_verify($password, $user['password'])) {
-                // Start the session
                 session_regenerate_id();
                 
-                // Set session variables
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['full_name'] = $user['full_name'];
-                $_SESSION['is_admin'] = $user['is_admin'] == 1; // Ensure this is set based on the database
+                $_SESSION['is_admin'] = $user['is_admin'] == 1;
                 
-                // Redirect to the appropriate page
                 if ($_SESSION['is_admin']) {
                     header("Location: admin/index.php");
                 } else {
@@ -60,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Generate a version string for cache busting
 $css_file_path = __DIR__ . '/assets/css/style.css';
 $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1';
 ?>

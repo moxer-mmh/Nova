@@ -1,16 +1,12 @@
 <?php
-// Include the header
 include_once 'includes/header.php';
 
-// Get featured products (newest 6 products)
 $featured_query = $conn->query("SELECT * FROM Products WHERE featured = 1 ORDER BY created_at DESC LIMIT 6");
 $featured_products = $featured_query->fetch_all(MYSQLI_ASSOC);
 
-// Get product categories
 $categories_query = $conn->query("SELECT DISTINCT category, COUNT(*) as product_count FROM Products GROUP BY category ORDER BY category");
 $categories = $categories_query->fetch_all(MYSQLI_ASSOC);
 
-// Get new arrivals (newest 4 products)
 $new_arrivals_query = $conn->query("SELECT * FROM Products ORDER BY created_at DESC LIMIT 4");
 $new_arrivals = $new_arrivals_query->fetch_all(MYSQLI_ASSOC);
 ?>
@@ -133,6 +129,5 @@ $new_arrivals = $new_arrivals_query->fetch_all(MYSQLI_ASSOC);
 </section>
 
 <?php
-// Include the footer
 include_once 'includes/footer.php';
 ?>

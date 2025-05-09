@@ -1,24 +1,19 @@
 <?php
-// Include the header
 include_once 'includes/header.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Process cart updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_cart'])) {
         foreach ($_POST['quantity'] as $cart_id => $quantity) {
             if ($quantity <= 0) {
-                // Remove item if quantity is 0 or negative
                 $delete_stmt = $conn->prepare("DELETE FROM Cart WHERE cart_id = ? AND user_id = ?");
                 $delete_stmt->bind_param("ii", $cart_id, $_SESSION['user_id']);
                 $delete_stmt->execute();
             } else {
-                // Update quantity
                 $update_stmt = $conn->prepare("UPDATE Cart SET quantity = ? WHERE cart_id = ? AND user_id = ?");
                 $update_stmt->bind_param("iii", $quantity, $cart_id, $_SESSION['user_id']);
                 $update_stmt->execute();
@@ -38,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get cart items
 $sql = "SELECT c.cart_id, c.quantity, p.product_id, p.name, p.price, p.image_url, p.stock 
         FROM Cart c 
         JOIN Products p ON c.product_id = p.product_id 
@@ -52,7 +46,6 @@ $result = $stmt->get_result();
 $cart_items = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Calculate cart total
 $cart_total = 0;
 foreach ($cart_items as $item) {
     $cart_total += $item['price'] * $item['quantity'];
@@ -143,6 +136,5 @@ foreach ($cart_items as $item) {
 <?php endif; ?>
 
 <?php
-// Include the footer
 include_once 'includes/footer.php';
 ?>

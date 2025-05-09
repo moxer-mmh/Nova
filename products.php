@@ -1,8 +1,6 @@
 <?php
-// Include the header
 include_once 'includes/header.php';
 
-// Set default values for filters
 $category = isset($_GET['category']) ? $_GET['category'] : '';
 $min_price = isset($_GET['min_price']) ? (int)$_GET['min_price'] : 0;
 $max_price = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 10000;
@@ -11,8 +9,7 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $products_per_page = 12;
 
-// Prepare the WHERE clause for the SQL query
-$where_clauses = ["1=1"]; // Start with a dummy condition
+$where_clauses = ["1=1"];
 $params = [];
 $types = '';
 
@@ -42,10 +39,8 @@ if (!empty($search)) {
     $types .= "ss";
 }
 
-// Build the WHERE clause
 $where_clause = implode(' AND ', $where_clauses);
 
-// Determine sorting
 $sort_clause = "";
 switch ($sort_by) {
     case 'price_asc':
@@ -65,7 +60,6 @@ switch ($sort_by) {
         break;
 }
 
-// Count total products matching filter
 $count_sql = "SELECT COUNT(*) as total FROM Products WHERE $where_clause";
 $stmt = $conn->prepare($count_sql);
 if (!empty($types)) {
@@ -80,11 +74,9 @@ $stmt->close();
 $total_pages = ceil($total_products / $products_per_page);
 $offset = ($page - 1) * $products_per_page;
 
-// Get categories for the filter
 $cat_result = $conn->query("SELECT DISTINCT category FROM Products ORDER BY category");
 $categories = $cat_result->fetch_all(MYSQLI_ASSOC);
 
-// Get filtered products
 $sql = "SELECT * FROM Products WHERE $where_clause ORDER BY $sort_clause LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($sql);
 $params[] = $products_per_page;
@@ -243,7 +235,6 @@ $stmt->close();
 
 <script>
 function resetFilters() {
-    // If there's a search query, keep it but reset all other filters
     const searchParam = new URLSearchParams(window.location.search).get('search');
     if (searchParam) {
         window.location.href = 'products.php?search=' + encodeURIComponent(searchParam);
@@ -254,6 +245,5 @@ function resetFilters() {
 </script>
 
 <?php
-// Include the footer
 include_once 'includes/footer.php';
 ?>

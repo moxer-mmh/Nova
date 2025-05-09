@@ -1,17 +1,13 @@
 <?php
-// Start session
 session_start();
 
-// Check if user is logged in and is an admin
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     header("Location: ../login.php");
     exit();
 }
 
-// Include database connection
 require_once '../includes/db.php';
 
-// Check if product ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: manage_products.php");
     exit();
@@ -21,13 +17,11 @@ $product_id = (int)$_GET['id'];
 $error = '';
 $success = '';
 
-// Get product data
 $stmt = $conn->prepare("SELECT * FROM Products WHERE product_id = ?");
 $stmt->bind_param("i", $product_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Check if product exists
 if ($result->num_rows === 0) {
     header("Location: manage_products.php");
     exit();
@@ -36,38 +30,30 @@ if ($result->num_rows === 0) {
 $product = $result->fetch_assoc();
 $stmt->close();
 
-// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form data
     $name = trim($_POST['name'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $price = (float)($_POST['price'] ?? 0);
     $stock = (int)($_POST['stock'] ?? 0);
     $category = trim($_POST['category'] ?? '');
     
-    // Validate form data
     if (empty($name) || empty($description) || $price <= 0 || $stock < 0 || empty($category)) {
         $error = "Please fill in all fields correctly.";
     } else {
-        // Check if we need to update the image
-        $image_url = $product['image_url']; // Keep existing image by default
+        $image_url = $product['image_url'];
         
         if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
             $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
             $file_name = $_FILES['image']['name'];
             $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
             
-            // Validate file extension
             if (in_array($file_ext, $allowed_ext)) {
-                // Generate a unique filename
                 $new_file_name = uniqid() . '.' . $file_ext;
                 $upload_path = '../assets/images/' . $new_file_name;
                 
-                // Move the uploaded file
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
                     $image_url = $new_file_name;
                     
-                    // Delete old image if it's not the default
                     if ($product['image_url'] !== 'default.jpg') {
                         $old_image_path = '../assets/images/' . $product['image_url'];
                         if (file_exists($old_image_path)) {
@@ -82,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        // If no error, update the product in the database
         if (empty($error)) {
             $stmt = $conn->prepare("UPDATE Products SET name = ?, description = ?, price = ?, stock = ?, image_url = ?, category = ? WHERE product_id = ?");
             $stmt->bind_param("ssdissi", $name, $description, $price, $stock, $image_url, $category, $product_id);
@@ -90,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->execute()) {
                 $success = "Product updated successfully!";
                 
-                // Refresh product data
                 $stmt = $conn->prepare("SELECT * FROM Products WHERE product_id = ?");
                 $stmt->bind_param("i", $product_id);
                 $stmt->execute();
@@ -104,12 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get all distinct categories for the dropdown
 $result = $conn->query("SELECT DISTINCT category FROM Products ORDER BY category");
 $categories = $result->fetch_all(MYSQLI_ASSOC);
 
-// Generate a version string for cache busting for admin pages
-$admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css'; // Correct path from admin folder
+$admin_css_file_path = dirname(__DIR__) . '/assets/css/style.css';
 $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_file_path) : '1';
 ?>
 
@@ -232,7 +214,6 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
     
     <script src="../assets/js/script.js"></script>
     <script>
-        // Handle category selection
         document.getElementById('category').addEventListener('change', function() {
             const newCategoryGroup = document.getElementById('new-category-group');
             if (this.value === 'new') {
