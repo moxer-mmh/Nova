@@ -91,7 +91,7 @@ foreach ($cart_items as $item) {
             <tbody>
                 <?php foreach ($cart_items as $item): ?>
                     <tr>
-                        <td>
+                        <td data-label="Product">
                             <div class="cart-product">
                                 <img src="assets/images/<?php echo htmlspecialchars($item['image_url']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="80">
                                 <div>
@@ -100,12 +100,12 @@ foreach ($cart_items as $item) {
                                 </div>
                             </div>
                         </td>
-                        <td><?php echo formatCurrency($item['price']); ?></td>
-                        <td>
+                        <td data-label="Price"><?php echo formatCurrency($item['price']); ?></td>
+                        <td data-label="Quantity">
                             <input type="number" name="quantity[<?php echo $item['cart_id']; ?>]" value="<?php echo $item['quantity']; ?>" min="0" max="<?php echo $item['stock']; ?>" class="quantity-input">
                         </td>
-                        <td><?php echo formatCurrency($item['price'] * $item['quantity']); ?></td>
-                        <td>
+                        <td data-label="Total"><?php echo formatCurrency($item['price'] * $item['quantity']); ?></td>
+                        <td data-label="Actions">
                             <form method="post" action="cart.php" style="display:inline;">
                                 <input type="hidden" name="cart_id" value="<?php echo $item['cart_id']; ?>">
                                 <button type="submit" name="remove_item" class="btn btn-danger btn-sm">Remove</button>

@@ -99,8 +99,11 @@ $stmt->close();
 
 <div class="products-page-wrapper">
     <aside class="products-sidebar">
-        <div class="sidebar-section">
+        <div class="filter-toggle">
             <h3>Filter Products</h3>
+            <span class="filter-toggle-icon">▼</span>
+        </div>
+        <div class="filter-content">
             <form action="products.php" method="get" id="filter-form">
                 <?php if (!empty($search)): ?>
                     <input type="hidden" name="search" value="<?php echo htmlspecialchars($search); ?>">

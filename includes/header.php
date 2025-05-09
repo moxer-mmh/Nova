@@ -49,6 +49,9 @@ $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1';
             <div class="logo">
                 <h1><a href="<?php echo htmlspecialchars($base_url); ?>/index.php">Nova Gaming</a></h1>
             </div>
+            <button class="nav-toggle" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>☰
+            </button>
             <nav>
                 <ul class="nav-links">
                     <li><a href="<?php echo htmlspecialchars($base_url); ?>/index.php">Home</a></li>

@@ -126,17 +126,17 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                     <tbody>
                         <?php foreach($products as $product): ?>
                             <tr>
-                                <td><?php echo $product['product_id']; ?></td>
-                                <td>
+                                <td data-label="ID"><?php echo $product['product_id']; ?></td>
+                                <td data-label="Image">
                                     <img src="../assets/images/<?php echo htmlspecialchars($product['image_url']); ?>" 
                                          alt="<?php echo htmlspecialchars($product['name']); ?>" 
                                          style="max-width: 50px; max-height: 50px;">
                                 </td>
-                                <td><?php echo htmlspecialchars($product['name']); ?></td>
-                                <td><?php echo formatCurrency($product['price']); ?></td>
-                                <td><?php echo $product['stock']; ?></td>
-                                <td><?php echo htmlspecialchars($product['category']); ?></td>
-                                <td>
+                                <td data-label="Name"><?php echo htmlspecialchars($product['name']); ?></td>
+                                <td data-label="Price"><?php echo formatCurrency($product['price']); ?></td>
+                                <td data-label="Stock"><?php echo $product['stock']; ?></td>
+                                <td data-label="Category"><?php echo htmlspecialchars($product['category']); ?></td>
+                                <td data-label="Actions">
                                     <a href="edit_product.php?id=<?php echo $product['product_id']; ?>" class="btn btn-sm">Edit</a>
                                     <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $product['product_id']; ?>)" class="btn btn-sm btn-danger">Delete</a>
                                 </td>

@@ -125,14 +125,20 @@ $new_arrivals = $new_arrivals_query->fetch_all(MYSQLI_ASSOC);
     <div class="newsletter-content">
         <h2>Subscribe to Our Newsletter</h2>
         <p>Stay updated with the latest products, exclusive deals, and gaming news.</p>
-        <form class="newsletter-form">
-            <input type="email" placeholder="Your email address" required>
-            <button type="submit" class="btn">Subscribe</button>
-        </form>
-    </div>
-</section>
-
-<?php
-// Include the footer
-include_once 'includes/footer.php';
-?>
+        
+        <?php if(isset($_SESSION['newsletter_success'])): ?>
+            <div class="alert alert-success">
+                <?php echo $_SESSION['newsletter_success']; ?>
+                <?php unset($_SESSION['newsletter_success']); ?>
+            </div>
+        <?php endif; ?>
+        
+        <?php if(isset($_SESSION['newsletter_error'])): ?>
+            <div class="alert alert-danger">
+                <?php echo $_SESSION['newsletter_error']; ?>
+                <?php unset($_SESSION['newsletter_error']); ?>
+            </div>
+        <?php endif; ?>
+        
+        <form class="newsletter-form" action="newsletter_signup.php" method="post">
+            <div class="newsletter-input-group"></div>
