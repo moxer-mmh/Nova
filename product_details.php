@@ -149,31 +149,151 @@ $stmt->close();
     </section>
 <?php endif; ?>
 
-<script></script>
+<script>
+/**
+ * Change the main product image when a thumbnail is clicked
+ */
 function changeMainImage(src) {
-    document.getElementById('main-product-image').src = src;
+    const mainImage = document.getElementById('main-product-image');
+    if (mainImage) {
+        mainImage.src = src;
+        
+        // Highlight the active thumbnail
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        thumbnails.forEach(thumb => {
+            if (thumb.src === src) {
+                thumb.classList.add('active');
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+    }
 }
 
+/**
+ * Decrease the quantity input value
+ */
 function decrementQuantity() {
-    var quantityInput = document.getElementById('quantity');
-    var currentValue = parseInt(quantityInput.value);
+    const quantityInput = document.getElementById('quantity');
+    const currentValue = parseInt(quantityInput.value);
     if (currentValue > 1) {
         quantityInput.value = currentValue - 1;
+        // Trigger change event for any listeners
+        quantityInput.dispatchEvent(new Event('change'));
     }
 }
 
+/**
+ * Increase the quantity input value up to maximum stock
+ */
 function incrementQuantity(maxStock) {
-    var quantityInput = document.getElementById('quantity');
-    var currentValue = parseInt(quantityInput.value);
+    const quantityInput = document.getElementById('quantity');
+    const currentValue = parseInt(quantityInput.value);
     if (currentValue < maxStock) {
         quantityInput.value = currentValue + 1;
+        // Trigger change event for any listeners
+        quantityInput.dispatchEvent(new Event('change'));
+    } else {
+        // Visual feedback when max stock is reached
+        quantityInput.classList.add('max-reached');
+        setTimeout(() => {
+            quantityInput.classList.remove('max-reached');
+        }, 500);
     }
 }
 
+/**
+ * Show notification modal for out-of-stock products
+ */
 function notifyWhenAvailable(productId) {
-    alert('This feature is coming soon!');
-    // In a real implementation, you would collect the user's email and store it with the product ID
+    // Create a simple modal to collect email
+    const modal = document.createElement('div');
+    modal.className = 'notification-modal';
+    modal.innerHTML = `
+        <div class="notification-content">
+            <h3>Get Notified</h3>
+            <p>We'll email you when this product is back in stock.</p>
+            <input type="email" id="notification-email" placeholder="Your email address" required>
+            <div class="notification-actions">
+                <button onclick="submitNotification(${productId})" class="btn">Notify Me</button>
+                <button onclick="closeNotificationModal()" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.getElementById('notification-email').focus();
 }
+
+function submitNotification(productId) {
+    const email = document.getElementById('notification-email').value;
+    if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    // Here you would send the data to the server
+    // For now, just show a confirmation message
+    alert('Thank you! We will notify you when this product is back in stock.');
+    closeNotificationModal();
+    
+    // In a real implementation, you would call an API endpoint:
+    // fetch('notify_availability.php', {
+    //     method: 'POST',
+    //     body: JSON.stringify({ product_id: productId, email: email }),
+    //     headers: { 'Content-Type': 'application/json' }
+    // });
+}
+
+function closeNotificationModal() {
+    const modal = document.querySelector('.notification-modal');
+    if (modal) {
+        document.body.removeChild(modal);
+    }
+}
+
+// Add this CSS for the notification modal and quantity feedback
+document.head.insertAdjacentHTML('beforeend', `
+<style>
+    .max-reached {
+        background-color: #ffecec;
+        transition: background-color 0.3s;
+    }
+    .notification-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .notification-content {
+        background-color: #1f1f1f;
+        border-radius: 8px;
+        padding: 2rem;
+        width: 400px;
+        max-width: 90%;
+    }
+    .notification-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 1rem;
+    }
+    #notification-email {
+        width: 100%;
+        padding: 0.75rem;
+        margin-top: 1rem;
+        border: 1px solid #333;
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+        border-radius: 4px;
+    }
+</style>
+`);
 </script>
 
 <?php
