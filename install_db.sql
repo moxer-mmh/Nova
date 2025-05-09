@@ -101,6 +101,9 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Drop the procedure if it exists first
+DROP PROCEDURE IF EXISTS FinalizeOrder;
+
 -- Procedure to finalize an order and empty the cart
 DELIMITER //
 CREATE PROCEDURE FinalizeOrder(IN p_user_id INT, OUT p_order_id INT)
@@ -119,17 +122,26 @@ BEGIN
     
     SET p_order_id = LAST_INSERT_ID();
     
-    -- Copy items from cart to order_items
+    -- Copy items from cart to order_items and update product stock directly
     INSERT INTO Order_Items (order_id, product_id, quantity, price_per_unit)
     SELECT p_order_id, c.product_id, c.quantity, p.price
     FROM Cart c
     JOIN Products p ON c.product_id = p.product_id
     WHERE c.user_id = p_user_id;
     
+    -- Update product stock directly in the procedure
+    UPDATE Products p
+    JOIN Cart c ON p.product_id = c.product_id
+    SET p.stock = p.stock - c.quantity
+    WHERE c.user_id = p_user_id;
+    
     -- Empty the cart
     DELETE FROM Cart WHERE user_id = p_user_id;
 END //
 DELIMITER ;
+
+-- Remove the problematic trigger
+DROP TRIGGER IF EXISTS after_order_items_insert;
 
 -- Procedure to display order history
 DELIMITER //
@@ -146,18 +158,6 @@ BEGIN
         o.user_id = p_user_id
     ORDER BY 
         o.order_date DESC;
-END //
-DELIMITER ;
-
--- Trigger to update stock after order is placed
-DELIMITER //
-CREATE TRIGGER after_order_items_insert
-AFTER INSERT ON Order_Items
-FOR EACH ROW
-BEGIN
-    UPDATE Products
-    SET stock = stock - NEW.quantity
-    WHERE product_id = NEW.product_id;
 END //
 DELIMITER ;
 
