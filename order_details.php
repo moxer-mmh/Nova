@@ -63,16 +63,16 @@ $order_summary = $order_items[0];
                 <?php foreach ($order_items as $item): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($item['product_name']); ?></td>
-                        <td>$<?php echo number_format($item['price_per_unit'], 2); ?></td>
+                        <td><?php echo formatCurrency($item['price_per_unit']); ?></td>
                         <td><?php echo $item['quantity']; ?></td>
-                        <td>$<?php echo number_format($item['item_total'], 2); ?></td>
+                        <td><?php echo formatCurrency($item['price_per_unit'] * $item['quantity']); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
                     <th colspan="3">Total</th>
-                    <th>$<?php echo number_format($order_summary['total_amount'], 2); ?></th>
+                    <th><?php echo formatCurrency($order_summary['total_amount']); ?></th>
                 </tr>
             </tfoot>
         </table>

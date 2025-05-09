@@ -5,8 +5,9 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection
+// Include database connection and currency formatting
 include_once '../includes/db.php';
+include_once '../includes/currency_format.php'; // Add this line
 
 // Check if order ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -105,7 +106,7 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                         </div>
                         <div class="meta-item">
                             <span class="meta-label">Total Amount:</span>
-                            <span class="meta-value">$<?php echo number_format($order['total_amount'], 2); ?></span>
+                            <span class="meta-value"><?php echo formatCurrency($order['total_amount']); ?></span>
                         </div>
                     </div>
                     
@@ -164,16 +165,16 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                                              style="max-width: 60px; max-height: 60px;">
                                     </td>
                                     <td><?php echo htmlspecialchars($item['name']); ?></td>
-                                    <td>$<?php echo number_format($item['price_per_unit'], 2); ?></td>
+                                    <td><?php echo formatCurrency($item['price_per_unit']); ?></td>
                                     <td><?php echo $item['quantity']; ?></td>
-                                    <td>$<?php echo number_format($item['price_per_unit'] * $item['quantity'], 2); ?></td>
+                                    <td><?php echo formatCurrency($item['price_per_unit'] * $item['quantity']); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="4" class="text-right"><strong>Total:</strong></td>
-                                <td><strong>$<?php echo number_format($order['total_amount'], 2); ?></strong></td>
+                                <td><strong><?php echo formatCurrency($order['total_amount']); ?></strong></td>
                             </tr>
                         </tfoot>
                     </table>

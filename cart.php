@@ -96,15 +96,15 @@ foreach ($cart_items as $item) {
                                 <img src="assets/images/<?php echo htmlspecialchars($item['image_url']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" width="80">
                                 <div>
                                     <h4><?php echo htmlspecialchars($item['name']); ?></h4>
-                                    <small>Stock: <?php echo $item['stock']; ?></small>
+                                    <small>SKU: <?php echo $item['product_id']; ?></small>
                                 </div>
                             </div>
                         </td>
-                        <td>$<?php echo number_format($item['price'], 2); ?></td>
+                        <td><?php echo formatCurrency($item['price']); ?></td>
                         <td>
                             <input type="number" name="quantity[<?php echo $item['cart_id']; ?>]" value="<?php echo $item['quantity']; ?>" min="0" max="<?php echo $item['stock']; ?>" class="quantity-input">
                         </td>
-                        <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                        <td><?php echo formatCurrency($item['price'] * $item['quantity']); ?></td>
                         <td>
                             <form method="post" action="cart.php" style="display:inline;">
                                 <input type="hidden" name="cart_id" value="<?php echo $item['cart_id']; ?>">
@@ -130,8 +130,12 @@ foreach ($cart_items as $item) {
                 <td><?php echo count($cart_items); ?></td>
             </tr>
             <tr>
-                <td>Total Price:</td>
-                <td>$<?php echo number_format($cart_total, 2); ?></td>
+                <td>Subtotal</td>
+                <td><?php echo formatCurrency($cart_total); ?></td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td><?php echo formatCurrency($cart_total); ?></td>
             </tr>
         </table>
         <a href="checkout.php" class="btn">Proceed to Checkout</a>

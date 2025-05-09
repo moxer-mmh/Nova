@@ -97,16 +97,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
                     <?php foreach ($cart_items as $item): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($item['name']); ?></td>
-                            <td>$<?php echo number_format($item['price'], 2); ?></td>
+                            <td><?php echo formatCurrency($item['price']); ?></td>
                             <td><?php echo $item['quantity']; ?></td>
-                            <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                            <td><?php echo formatCurrency($item['price'] * $item['quantity']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3">Total</th>
-                        <th>$<?php echo number_format($cart_total, 2); ?></th>
+                        <td>Subtotal</td>
+                        <td><?php echo formatCurrency($cart_total); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td><?php echo formatCurrency($cart_total); ?></td>
                     </tr>
                 </tfoot>
             </table>

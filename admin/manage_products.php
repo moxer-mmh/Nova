@@ -5,8 +5,9 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection
+// Include database connection and currency formatting
 include_once '../includes/db.php';
+include_once '../includes/currency_format.php'; // Add this line
 
 // Handle deletion if requested
 if(isset($_GET['delete']) && is_numeric($_GET['delete'])) {
@@ -132,7 +133,7 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                                          style="max-width: 50px; max-height: 50px;">
                                 </td>
                                 <td><?php echo htmlspecialchars($product['name']); ?></td>
-                                <td>$<?php echo number_format($product['price'], 2); ?></td>
+                                <td><?php echo formatCurrency($product['price']); ?></td>
                                 <td><?php echo $product['stock']; ?></td>
                                 <td><?php echo htmlspecialchars($product['category']); ?></td>
                                 <td>

@@ -50,7 +50,7 @@ $stmt->close();
                 <tr>
                     <td><?php echo $order['order_id']; ?></td>
                     <td><?php echo date('F j, Y', strtotime($order['order_date'])); ?></td>
-                    <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
+                    <td><?php echo formatCurrency($order['total_amount']); ?></td>
                     <td>
                         <span class="status-<?php echo strtolower($order['status']); ?>">
                             <?php echo $order['status']; ?>

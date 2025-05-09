@@ -5,8 +5,9 @@ if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
     exit();
 }
 
-// Include database connection
+// Include database connection and currency formatting
 include_once '../includes/db.php';
+include_once '../includes/currency_format.php'; // Add this line
 
 // Check if user ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -115,7 +116,7 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                             <tr>
                                 <td>#<?php echo $order['order_id']; ?></td>
                                 <td><?php echo date('F j, Y, g:i a', strtotime($order['order_date'])); ?></td>
-                                <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
+                                <td><?php echo formatCurrency($order['total_amount']); ?></td>
                                 <td>
                                     <span class="status-<?php echo strtolower($order['status']); ?>">
                                         <?php echo $order['status']; ?>

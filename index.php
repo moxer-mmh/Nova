@@ -47,7 +47,7 @@ $new_arrivals = $new_arrivals_query->fetch_all(MYSQLI_ASSOC);
                                 <?php echo htmlspecialchars($product['name']); ?>
                             </a>
                         </h3>
-                        <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                        <p class="product-price"><?php echo formatCurrency($product['price']); ?></p>
                         <p class="product-category"><?php echo htmlspecialchars($product['category']); ?></p>
                         <div class="product-actions">
                             <a href="product_details.php?id=<?php echo $product['product_id']; ?>" class="btn">View Details</a>
@@ -110,7 +110,7 @@ $new_arrivals = $new_arrivals_query->fetch_all(MYSQLI_ASSOC);
                             <?php echo htmlspecialchars($product['name']); ?>
                         </a>
                     </h3>
-                    <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                    <p class="product-price"><?php echo formatCurrency($product['price']); ?></p>
                     <p class="product-category"><?php echo htmlspecialchars($product['category']); ?></p>
                     <div class="product-actions">
                         <a href="product_details.php?id=<?php echo $product['product_id']; ?>" class="btn">View Details</a>

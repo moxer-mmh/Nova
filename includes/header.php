@@ -6,6 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Include database connection
 require_once dirname(__FILE__) . '/db.php';
+require_once 'currency_format.php'; // Add this line to include the currency formatter
 
 // Calculate base URL for assets and navigation
 $document_root = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '/');

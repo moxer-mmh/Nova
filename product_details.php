@@ -62,11 +62,11 @@ $stmt->close();
         <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
         
         <div class="product-meta">
-            <span class="product-category"><?php echo htmlspecialchars($product['category']); ?></span>
-            <span class="product-sku">SKU: <?php echo htmlspecialchars($product['sku']); ?></span>
+            <span class="product-category">Category: <?php echo htmlspecialchars($product['category']); ?></span>
+            <span class="product-sku">SKU: <?php echo $product['product_id']; ?></span>
         </div>
-        
-        <div class="product-price">$<?php echo number_format($product['price'], 2); ?></div>
+                
+        <p class="product-price"><?php echo formatCurrency($product['price']); ?></p>
         
         <div class="product-stock">
             <?php if ($product['stock'] > 0): ?>

@@ -173,7 +173,7 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                 </div>
                 
                 <div class="form-group">
-                    <label for="price">Price ($):</label>
+                    <label for="price">Price (DA):</label>
                     <input type="number" class="form-control" id="price" name="price" min="0.01" step="0.01" value="<?php echo $product['price']; ?>" required>
                 </div>
                 
