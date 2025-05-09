@@ -52,9 +52,9 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
             <nav>
                 <ul class="nav-links">
                     <li><a href="../index.php">View Site</a></li>
-                    <li><a href="products.php">Products</a></li>
-                    <li><a href="orders.php">Orders</a></li>
-                    <li><a href="users.php">Users</a></li>
+                    <li><a href="manage_products.php">Products</a></li>
+                    <li><a href="manage_orders.php">Orders</a></li>
+                    <li><a href="manage_users.php">Users</a></li>
                     <li><a href="../logout.php">Logout (<?php echo $_SESSION['username']; ?>)</a></li>
                 </ul>
             </nav>
@@ -78,19 +78,19 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                 <div class="stat-box">
                     <h3>Products</h3>
                     <p class="stat-number"><?php echo $total_products; ?></p>
-                    <a href="products.php" class="btn btn-sm">View All</a>
+                    <a href="manage_products.php" class="btn btn-sm">View All</a>
                 </div>
                 
                 <div class="stat-box">
                     <h3>Orders</h3>
                     <p class="stat-number"><?php echo $total_orders; ?></p>
-                    <a href="orders.php" class="btn btn-sm">View All</a>
+                    <a href="manage_orders.php" class="btn btn-sm">View All</a>
                 </div>
                 
                 <div class="stat-box">
                     <h3>Customers</h3>
                     <p class="stat-number"><?php echo $total_users; ?></p>
-                    <a href="users.php" class="btn btn-sm">View All</a>
+                    <a href="manage_users.php" class="btn btn-sm">View All</a>
                 </div>
             </div>
             

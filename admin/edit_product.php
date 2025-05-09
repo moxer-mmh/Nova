@@ -13,7 +13,7 @@ require_once '../includes/db.php';
 
 // Check if product ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    header("Location: products.php");
+    header("Location: manage_products.php");
     exit();
 }
 
@@ -29,7 +29,7 @@ $result = $stmt->get_result();
 
 // Check if product exists
 if ($result->num_rows === 0) {
-    header("Location: products.php");
+    header("Location: manage_products.php");
     exit();
 }
 
@@ -130,9 +130,9 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
             <nav>
                 <ul class="nav-links">
                     <li><a href="../index.php">View Site</a></li>
-                    <li><a href="products.php">Products</a></li>
-                    <li><a href="orders.php">Orders</a></li>
-                    <li><a href="users.php">Users</a></li>
+                    <li><a href="manage_products.php">Products</a></li>
+                    <li><a href="manage_orders.php">Orders</a></li>
+                    <li><a href="manage_users.php">Users</a></li>
                     <li><a href="../logout.php">Logout (<?php echo $_SESSION['username']; ?>)</a></li>
                 </ul>
             </nav>
@@ -143,10 +143,10 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
         <aside class="admin-sidebar">
             <ul>
                 <li><a href="index.php">Dashboard</a></li>
-                <li><a href="products.php" class="active">Manage Products</a></li>
+                <li><a href="manage_products.php" class="active">Manage Products</a></li>
                 <li><a href="add_product.php">Add New Product</a></li>
                 <li><a href="orders.php">Manage Orders</a></li>
-                <li><a href="users.php">Manage Users</a></li>
+                <li><a href="manage_users.php">Manage Users</a></li>
             </ul>
         </aside>
         
@@ -211,7 +211,7 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
                 </div>
                 
                 <button type="submit" class="btn">Update Product</button>
-                <a href="products.php" class="btn btn-secondary">Cancel</a>
+                <a href="manage_products.php" class="btn btn-secondary">Cancel</a>
             </form>
         </main>
     </div>
