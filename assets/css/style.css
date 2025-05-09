@@ -254,7 +254,7 @@ header .container {
 
 /* Hero Section */
 .hero-section { /* Renamed from .hero for clarity */
-    /*background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('../images/hero-bg.jpg') no-repeat center center/cover;*/
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8));
     color: #ffffff;
     text-align: center;
     padding: 100px 20px; /* Increased padding */

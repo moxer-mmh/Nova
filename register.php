@@ -169,15 +169,15 @@ $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1';
                     <ul>
                         <li><a href="index.php">Home</a></li>
                         <li><a href="products.php">Products</a></li>
-                        <li><a href="login.php">My Account</a></li>
+                        <li><a href="orders.php">My Orders</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h3>Contact Us</h3>
                     <p>Email: info@novagaming.com</p>
-                    <p>Phone: (123) 456-7890</p>
-                    <p>Address: 123 Gaming Street, Tech City</p>
+                    <p>Phone: (+213) 666 26 36 46</p>
+                    <p>Address: 123 USTHB Info, Faculte</p>
                 </div>
             </div>
             
