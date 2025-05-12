@@ -308,8 +308,6 @@ Nova Gaming is fully responsive and optimized for all devices:
 
 ## Default Users
 
-Two default accounts are provided for testing:
-
 ### Admin Account
 
 - Username: admin
