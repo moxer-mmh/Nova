@@ -3,7 +3,7 @@ include_once 'includes/header.php';
 
 $category = isset($_GET['category']) ? $_GET['category'] : '';
 $min_price = isset($_GET['min_price']) ? (int)$_GET['min_price'] : 0;
-$max_price = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 10000;
+$max_price = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 1000000000;
 $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'name_asc';
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -25,7 +25,7 @@ if ($min_price > 0) {
     $types .= "d";
 }
 
-if ($max_price < 10000) {
+if ($max_price < 1000000000) {
     $where_clauses[] = "price <= ?";
     $params[] = $max_price;
     $types .= "d";
@@ -93,7 +93,6 @@ $stmt->close();
     <aside class="products-sidebar">
         <div class="filter-toggle">
             <h3>Filter Products</h3>
-            <span class="filter-toggle-icon">▼</span>
         </div>
         <div class="filter-content">
             <form action="products.php" method="get" id="filter-form">
@@ -117,10 +116,10 @@ $stmt->close();
                 <div class="filter-group">
                     <h4>Price Range</h4>
                     <div class="price-slider">
-                        <input type="number" name="min_price" min="0" max="10000" step="10" 
+                        <input type="number" name="min_price" min="0" max="1000000000" step="100" 
                             value="<?php echo $min_price; ?>" class="form-control price-input">
                         <span>to</span>
-                        <input type="number" name="max_price" min="0" max="10000" step="10" 
+                        <input type="number" name="max_price" min="0" max="1000000000" step="100" 
                             value="<?php echo $max_price; ?>" class="form-control price-input">
                     </div>
                     <button type="submit" class="btn btn-sm">Apply Price Filter</button>
@@ -213,19 +212,19 @@ $stmt->close();
             <?php if ($total_pages > 1): ?>
                 <div class="pagination"></div>
                     <?php if ($page > 1): ?>
-                        <a href="?page=<?php echo ($page - 1); ?><?php echo !empty($category) ? '&category=' . urlencode($category) : ''; ?><?php echo ($min_price > 0) ? '&min_price=' . $min_price : ''; ?><?php echo ($max_price < 10000) ? '&max_price=' . $max_price : ''; ?><?php echo !empty($sort_by) ? '&sort_by=' . urlencode($sort_by) : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="page-link">&laquo; Previous</a>
+                        <a href="?page=<?php echo ($page - 1); ?><?php echo !empty($category) ? '&category=' . urlencode($category) : ''; ?><?php echo ($min_price > 0) ? '&min_price=' . $min_price : ''; ?><?php echo ($max_price < 1000000000) ? '&max_price=' . $max_price : ''; ?><?php echo !empty($sort_by) ? '&sort_by=' . urlencode($sort_by) : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="page-link">&laquo; Previous</a>
                     <?php endif; ?>
 
                     <?php for ($i = max(1, $page - 2); $i <= min($total_pages, $page + 2); $i++): ?>
                         <?php if ($i == $page): ?>
                             <span class="page-link current"><?php echo $i; ?></span>
                         <?php else: ?>
-                            <a href="?page=<?php echo $i; ?><?php echo !empty($category) ? '&category=' . urlencode($category) : ''; ?><?php echo ($min_price > 0) ? '&min_price=' . $min_price : ''; ?><?php echo ($max_price < 10000) ? '&max_price=' . $max_price : ''; ?><?php echo !empty($sort_by) ? '&sort_by=' . urlencode($sort_by) : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="page-link"><?php echo $i; ?></a>
+                            <a href="?page=<?php echo $i; ?><?php echo !empty($category) ? '&category=' . urlencode($category) : ''; ?><?php echo ($min_price > 0) ? '&min_price=' . $min_price : ''; ?><?php echo ($max_price < 1000000000) ? '&max_price=' . $max_price : ''; ?><?php echo !empty($sort_by) ? '&sort_by=' . urlencode($sort_by) : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="page-link"><?php echo $i; ?></a>
                         <?php endif; ?>
                     <?php endfor; ?>
 
                     <?php if ($page < $total_pages): ?>
-                        <a href="?page=<?php echo ($page + 1); ?><?php echo !empty($category) ? '&category=' . urlencode($category) : ''; ?><?php echo ($min_price > 0) ? '&min_price=' . $min_price : ''; ?><?php echo ($max_price < 10000) ? '&max_price=' . $max_price : ''; ?><?php echo !empty($sort_by) ? '&sort_by=' . urlencode($sort_by) : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="page-link">Next &raquo;</a>
+                        <a href="?page=<?php echo ($page + 1); ?><?php echo !empty($category) ? '&category=' . urlencode($category) : ''; ?><?php echo ($min_price > 0) ? '&min_price=' . $min_price : ''; ?><?php echo ($max_price < 1000000000) ? '&max_price=' . $max_price : ''; ?><?php echo !empty($sort_by) ? '&sort_by=' . urlencode($sort_by) : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="page-link">Next &raquo;</a>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
