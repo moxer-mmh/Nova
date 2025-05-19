@@ -57,14 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($_FILES['product_image']['size'] > $max_size) {
             $errors[] = "Image size should not exceed 5MB";
         } else {
-            $image_name = time() . '_' . basename($_FILES['product_image']['name']);
+            $file_extension = pathinfo($_FILES['product_image']['name'], PATHINFO_EXTENSION);
+            $image_name = substr(uniqid(), 0, 10) . '.' . $file_extension;
             $upload_dir = '../assets/images/';
             $upload_path = $upload_dir . $image_name;
             
             if (move_uploaded_file($_FILES['product_image']['tmp_name'], $upload_path)) {
                 $image_url = $image_name;
+                
+                error_log("Image name created: " . $image_name);
             } else {
                 $errors[] = "Failed to upload image";
+                error_log("Failed to upload image from " . $_FILES['product_image']['tmp_name'] . " to " . $upload_path);
             }
         }
     } else {
@@ -72,18 +76,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (empty($errors)) {
-        $stmt = $conn->prepare("INSERT INTO Products (name, description, price, stock, category, image_url, featured, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->bind_param("ssdssis", $name, $description, $price, $stock, $category, $image_url, $featured);
+        $escaped_name = $conn->real_escape_string($name);
+        $escaped_desc = $conn->real_escape_string($description);
+        $escaped_category = $conn->real_escape_string($category);
+        $escaped_image = $conn->real_escape_string($image_url);
         
-        if ($stmt->execute()) {
+        $sql = "INSERT INTO Products (name, description, price, stock, category, image_url, featured, created_at) 
+                VALUES ('$escaped_name', '$escaped_desc', $price, $stock, '$escaped_category', '$escaped_image', $featured, NOW())";
+        
+        if ($conn->query($sql)) {
             $success = true;
             $name = $description = $price = $stock = $category = '';
             $featured = 0;
+            
+            $new_id = $conn->insert_id;
+            $check_result = $conn->query("SELECT image_url FROM Products WHERE product_id = $new_id");
+            if ($check_result && $row = $check_result->fetch_assoc()) {
+                error_log("Saved image_url: " . $row['image_url']);
+            }
         } else {
             $errors[] = "Failed to add product: " . $conn->error;
+            error_log("SQL Error: " . $conn->error);
         }
-        
-        $stmt->close();
     }
 }
 
@@ -99,7 +113,7 @@ $admin_css_version = file_exists($admin_css_file_path) ? filemtime($admin_css_fi
     <title>Add New Product - Nova Gaming Admin</title>
     <link rel="stylesheet" href="../assets/css/style.css?v=<?php echo $admin_css_version; ?>">
 </head>
-<body>
+<body></body>
     <header>
         <div class="container">
             <div class="logo">
