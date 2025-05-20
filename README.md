@@ -209,7 +209,7 @@ Cart (*) ---- (1) Users
 1. **Clone the repository**
 
    ```
-   git clone https://github.com/yourusername/Nova.git
+   git clone https://github.com/moxer-mmh/Nova.git
    ```
 2. **Set up the database**
 
