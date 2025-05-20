@@ -139,7 +139,7 @@ erDiagram
 ### Triggers
 
 1. **before_cart_insert**: Empêche l'ajout au panier si la quantité dépasse le stock
-2. **RestoreStockAfterCancellation** : Gére les commandes annuleé
+2. **after_order_cancel** : Gére les commandes annuleé
 
 ```mermaid
 flowchart TD
