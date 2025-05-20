@@ -1,5 +1,4 @@
 # Image uploads
-/assets/images/*
 /assets/images/products/*
 !/assets/images/products/.gitkeep
 
